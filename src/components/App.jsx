@@ -52,7 +52,7 @@ class App extends Component {
   };
 
   render() {
-    const { images, showModal, modalImageURL, loading } = this.state;
+    const { images, loading } = this.state;
 
     return (
       <div className={styles.App}>

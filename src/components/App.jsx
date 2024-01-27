@@ -4,7 +4,7 @@ import ImageGallery from './imageGallery/ImageGallery';
 import Searchbar from './searchbar/Searchbar';
 import Loader from './loader/Loader';
 import styles from './App.module.css';
-import pixabayService from './services/pixabayService';
+import pixabayService from './searchbar/pixabayService';
 
 class App extends Component {
   constructor(props) {

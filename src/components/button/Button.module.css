@@ -1,3 +1,11 @@
+.ButtonContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
 .Button {
   padding: 8px 16px;
   border-radius: 2px;

@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import Searchbar from './searchbar/Searchbar';
 import Loader from './loader/Loader';
 import ImageGallery from './imageGallery/ImageGallery';
-import Button from './button/Button';
+import ScrollButton from './buttons/scrollButton/ScrollButton';
+import Button from './buttons/loadButton/LoadButton';
 import Modal from './modal/Modal';
 import pixabayService from './services/pixabayService';
 
@@ -95,6 +96,8 @@ class App extends Component {
         {showModal && (
           <Modal image={selectedImage} onClose={this.handleModalClose} />
         )}
+
+        <ScrollButton />
       </>
     );
   }

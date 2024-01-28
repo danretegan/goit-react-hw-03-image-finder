@@ -1,4 +1,5 @@
 import axios from 'axios';
+import notiflix from 'notiflix';
 
 const API_KEY = '34187261-edb3bdfe414ee3b7adebeccc5';
 const BASE_URL = 'https://pixabay.com/api/';
@@ -13,7 +14,9 @@ const pixabayService = {
       const { hits, totalHits } = response.data;
 
       if (!Array.isArray(hits)) {
-        console.log('Invalid response format. Hits should be an array.');
+        notiflix.Notify.failure(
+          'Invalid response format. Hits should be an array.'
+        );
         return {
           images: [],
           totalHits: 0,
@@ -21,7 +24,13 @@ const pixabayService = {
       }
 
       if (hits.length === 0) {
-        console.log('Sorry, there are no images matching your request...');
+        notiflix.Notify.info(
+          'Sorry, there are no images matching your request...'
+        );
+        return {
+          images: [],
+          totalHits: 0,
+        };
       }
 
       const modifiedHits = hits.map(
@@ -38,6 +47,7 @@ const pixabayService = {
         totalHits,
       };
     } catch (error) {
+      notiflix.Notify.failure(`Error: ${error.message}`);
       throw new Error(error.message);
     }
   },

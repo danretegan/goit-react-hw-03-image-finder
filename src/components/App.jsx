@@ -32,10 +32,14 @@ class App extends Component {
     this.setState({ isLoading: true });
 
     try {
+      // Încărcare imaginilor
       const { images, totalHits } = await pixabayService.searchImages(
         query,
         page
       );
+
+      // Așteptare 1 secundă după ce imaginile au fost încărcate
+      await new Promise(resolve => setTimeout(resolve, 1000));
 
       this.setState(prevState => ({
         images: [...prevState.images, ...images],
@@ -45,6 +49,8 @@ class App extends Component {
     } catch (error) {
       this.setState({ error: error.message });
     } finally {
+      // Oprim Loader-ul după 1 secundă
+      await new Promise(resolve => setTimeout(resolve, 1000));
       this.setState({ isLoading: false });
     }
   };

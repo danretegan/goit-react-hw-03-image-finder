@@ -1,6 +1,4 @@
-/* components//loader/Loader.module.css */
-.loader {
+.LoaderContainer {
   display: flex;
   justify-content: center;
-  font-size: 40px;
 }

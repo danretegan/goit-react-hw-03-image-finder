@@ -5,7 +5,7 @@ import styles from './Searchbar.module.css';
 
 class Searchbar extends Component {
   state = {
-    query: this.props.defaultQuery || '',
+    query: '',
   };
 
   handleChange = event => {
@@ -14,12 +14,10 @@ class Searchbar extends Component {
 
   handleSubmit = event => {
     event.preventDefault();
+    if (!this.state.query.trim()) {
+      return;
+    }
     this.props.onSubmit(this.state.query);
-    this.setState({ query: '' });
-  };
-
-  getCurrentQuery = () => {
-    return this.state.query;
   };
 
   render() {
@@ -40,6 +38,5 @@ class Searchbar extends Component {
 export default Searchbar;
 
 Searchbar.propTypes = {
-  defaultQuery: PropTypes.string,
   onSubmit: PropTypes.func.isRequired,
 };

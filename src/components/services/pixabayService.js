@@ -1,19 +1,44 @@
-// components/searchbar/pixabayService.js
 import axios from 'axios';
 
-const apiKey = '40850281-d34ea881c994bc1ff48fafec7';
-const baseUrl = 'https://pixabay.com/api/';
+const API_KEY = '34187261-edb3bdfe414ee3b7adebeccc5';
+const BASE_URL = 'https://pixabay.com/api/';
 
 const pixabayService = {
-  search: async query => {
+  searchImages: async (query, page = 1, perPage = 12) => {
     try {
       const response = await axios.get(
-        `${baseUrl}?q=${query}&key=${apiKey}&image_type=photo&orientation=horizontal&per_page=12`
+        `${BASE_URL}?q=${query}&page=${page}&key=${API_KEY}&image_type=photo&orientation=horizontal&per_page=${perPage}`
       );
-      return response.data.hits;
+
+      const { hits, totalHits } = response.data;
+
+      if (!Array.isArray(hits)) {
+        console.log('Invalid response format. Hits should be an array.');
+        return {
+          images: [],
+          totalHits: 0,
+        };
+      }
+
+      if (hits.length === 0) {
+        console.log('Sorry, there are no images matching your request...');
+      }
+
+      const modifiedHits = hits.map(
+        ({ id, tags, webformatURL, largeImageURL }) => ({
+          id,
+          tags,
+          webformatURL,
+          largeImageURL,
+        })
+      );
+
+      return {
+        images: modifiedHits,
+        totalHits,
+      };
     } catch (error) {
-      console.error('Error fetching data:', error);
-      return [];
+      throw new Error(error.message);
     }
   },
 };

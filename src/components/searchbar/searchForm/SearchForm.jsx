@@ -1,5 +1,5 @@
-// components/searchbar/searchForm/SearchForm.jsx
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import styles from './SearchForm.module.css';
 
 class SearchForm extends Component {
@@ -27,3 +27,9 @@ class SearchForm extends Component {
 }
 
 export default SearchForm;
+
+SearchForm.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
+  onChange: PropTypes.func.isRequired,
+  query: PropTypes.string.isRequired,
+};

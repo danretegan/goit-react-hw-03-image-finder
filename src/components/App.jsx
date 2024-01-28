@@ -1,69 +1,95 @@
-// components/App.jsx
 import React, { Component } from 'react';
-import ImageGallery from './imageGallery/ImageGallery';
 import Searchbar from './searchbar/Searchbar';
 import Loader from './loader/Loader';
-import styles from './App.module.css';
+import ImageGallery from './imageGallery/ImageGallery';
+import Button from './button/Button';
+import Modal from './modal/Modal';
 import pixabayService from './services/pixabayService';
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      images: [],
-      showModal: false,
-      modalImageURL: '',
-      loading: false,
-    };
+  state = {
+    images: [],
+    isLoading: false,
+    error: null,
+    query: '',
+    page: 1,
+    showModal: false,
+    selectedImage: null,
+    isLastPage: false,
+  };
+
+  componentDidUpdate(_prevProps, prevState) {
+    if (prevState.query !== this.state.query) {
+      this.setState({ images: [], page: 1, isLastPage: false }, () => {
+        this.fetchImages();
+      });
+    }
   }
 
-  componentDidMount() {
-    // Fetch default data on mount
-    this.fetchData();
-  }
+  fetchImages = async () => {
+    const { query, page } = this.state;
 
-  fetchData = async query => {
-    this.setState({ loading: true });
+    this.setState({ isLoading: true });
 
     try {
-      const results = await pixabayService.search(query);
+      const { images, totalHits } = await pixabayService.searchImages(
+        query,
+        page
+      );
 
-      // Simulează o întârziere de 500ms folosind setTimeout
-      setTimeout(() => {
-        this.setState({ images: results });
-      }, 1000);
+      this.setState(prevState => ({
+        images: [...prevState.images, ...images],
+        page: prevState.page + 1,
+        isLastPage: prevState.images.length + images.length >= totalHits,
+      }));
     } catch (error) {
-      console.error('Error fetching data:', error);
+      this.setState({ error: error.message });
     } finally {
-      // Setează starea de încărcare la false după 500ms
-      setTimeout(() => {
-        this.setState({ loading: false });
-      }, 1000);
+      this.setState({ isLoading: false });
     }
   };
 
-  handleImageClick = imageURL => {
-    this.setState({ modalImageURL: imageURL, showModal: true });
+  handleSearchSubmit = query => {
+    if (this.state.query === query) {
+      return;
+    }
+    this.setState({
+      query: query,
+      page: 1,
+      images: [],
+      error: null,
+      isLastPage: false,
+    });
   };
 
-  handleSearchSubmit = query => {
-    console.log('Search submitted with query:', query);
-    this.fetchData(query);
+  handleImageClick = image => {
+    this.setState({ selectedImage: image, showModal: true });
+    document.body.style.overflow = 'hidden';
+  };
+
+  handleModalClose = () => {
+    this.setState({ selectedImage: null, showModal: false });
+    document.body.style.overflow = 'auto';
   };
 
   render() {
-    const { images, loading } = this.state;
+    const { images, isLoading, error, showModal, selectedImage, isLastPage } =
+      this.state;
 
     return (
-      <div className={styles.App}>
+      <>
         <Searchbar onSubmit={this.handleSearchSubmit} />
-        {loading ? (
-          <Loader />
-        ) : (
-          <ImageGallery images={images} onImageClick={this.handleImageClick} />
+        {error && <p>Error: {error}</p>}
+        <ImageGallery images={images} onItemClick={this.handleImageClick} />
+        {isLoading && <Loader />}
+        {!isLoading && images.length > 0 && !isLastPage && (
+          <Button onClick={this.fetchImages} />
         )}
-        {/* Modal component here using showModal and modalImageURL */}
-      </div>
+
+        {showModal && (
+          <Modal image={selectedImage} onClose={this.handleModalClose} />
+        )}
+      </>
     );
   }
 }

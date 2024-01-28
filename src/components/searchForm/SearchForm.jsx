@@ -3,6 +3,12 @@ import PropTypes from 'prop-types';
 import styles from './SearchForm.module.css';
 
 class SearchForm extends Component {
+  handleClick = () => {
+    // La fiecare clic pe input, setează query-ul la un șir gol
+    const { onChange } = this.props;
+    onChange({ target: { value: '' } });
+  };
+
   render() {
     const { onSubmit, onChange, query } = this.props;
 
@@ -20,6 +26,7 @@ class SearchForm extends Component {
           placeholder="Search images and photos"
           value={query}
           onChange={onChange}
+          onClick={this.handleClick} // Adaugă acest eveniment pentru a goli input-ul
         />
       </form>
     );

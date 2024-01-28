@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import Searchbar from './searchbar/Searchbar';
 import Loader from './loader/Loader';
 import ImageGallery from './imageGallery/ImageGallery';
-import ScrollButton from './buttons/scrollButton/ScrollButton';
-import Button from './buttons/loadButton/LoadButton';
+import ScrollButton from './scrollButton/ScrollButton';
+import Button from './loadMoreButton/LoadButton';
 import Modal from './modal/Modal';
 import pixabayService from './services/pixabayService';
 
